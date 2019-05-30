@@ -3,11 +3,13 @@ import { AuthenticationService } from 'src/services/authentication.service';
 import { StorageService } from 'src/services/storage.service';
 import { User } from 'src/models/user';
 import { userInfo } from 'os';
+import { FilesService } from 'src/services/files.service';
+import { File } from 'src/models/files';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
@@ -18,13 +20,28 @@ export class HomeComponent implements OnInit {
   } = {};
 
   user: User;
+  files: File[];
 
   constructor(
     private authServ: AuthenticationService,
-    private storage: StorageService
+    private storage: StorageService,
+    private filesServ: FilesService
     ) { }
 
   ngOnInit() {
+    this.listFiles();
+  }
+
+  listFiles() {
+    this.filesServ.ListFiles().then((data) => {
+      this.files = data;
+    }, err => {
+      console.error(err);
+    });
+  }
+
+  downloadFile(file: File) {
+    this.filesServ.DownloadFile({id: file.id, filename: file.filename});
   }
 
   login() {

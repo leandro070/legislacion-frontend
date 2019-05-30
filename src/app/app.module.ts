@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/services/authentication.service';
 import { HttpClientModule } from '@angular/common/http';
 import { StorageService } from 'src/services/storage.service';
+import { FilesService } from 'src/services/files.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { StorageService } from 'src/services/storage.service';
   ],
   providers: [
     AuthenticationService,
-    StorageService
+    StorageService,
+    FilesService
   ],
   bootstrap: [AppComponent]
 })
