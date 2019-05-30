@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/services/authentication.service';
+import { StorageService } from 'src/services/storage.service';
+import { User } from 'src/models/user';
+import { userInfo } from 'os';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +11,41 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  loginData: {
+    username?: string,
+    password?: string,
+    loading?: boolean
+  } = {};
+
+  user: User;
+
+  constructor(
+    private authServ: AuthenticationService,
+    private storage: StorageService
+    ) { }
 
   ngOnInit() {
   }
 
+  login() {
+    if (this.loginData.password && this.loginData.username) {
+      this.loginData.loading = true;
+      this.authServ.LoginUser({username: this.loginData.username, password: this.loginData.password})
+      .then((user) => {
+        this.storage.setValue('token', user.token);
+        this.user = user;
+        this.loginData.loading = false;
+      }, err => {
+        this.loginData.loading = false;
+        console.error(err);
+      });
+    }
+  }
+
+  logout() {
+    if (this.user) {
+      this.authServ.LogoutUser();
+      this.user = null;
+    }
+  }
 }

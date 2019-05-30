@@ -31,15 +31,27 @@
     </div>
     <div class="col-sm-3">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" *ngIf="!user">
           <h5 class="card-title">Ingreso para el profesor</h5>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Usuario">
+          <div class="input-group mb-3" *ngIf="!loginData.loading">
+            <input type="text" class="form-control" placeholder="Usuario" [(ngModel)]="loginData.username">
           </div>
-          <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Contraseña">
+          <div class="input-group mb-3" *ngIf="!loginData.loading">
+            <input type="password" class="form-control" placeholder="Contraseña" [(ngModel)]="loginData.password">
           </div>
-          <button type="button" class="btn btn-primary btn-block">Ingresar</button>
+
+          <div class="d-flex align-items-center" *ngIf="loginData.loading == true">
+              <strong>Loading...</strong>
+              <div class="spinner-grow ml-auto m-2" role="status" aria-hidden="true"></div>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-block" (click)="login()">Ingresar</button>
+        </div>
+
+        <div class="card-body" *ngIf="user">
+          <p>Inició sesión como:</p>
+          <h5 class="card-title">{{user.fullname}}</h5>
+          <button type="button" class="btn btn-primary btn-block" (click)="logout()">Cerrar Sesión</button>
         </div>
       </div>
     </div>
