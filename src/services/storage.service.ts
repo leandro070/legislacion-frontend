@@ -12,8 +12,12 @@ export class StorageService {
     localStorage.setItem(key, valueJson);
   }
 
-  removeValue(key: string): any {
+  getValue(key: string): any {
     const valueJson = localStorage.getItem(key);
     return JSON.parse(valueJson);
+  }
+
+  removeValue(key: string): void {
+    localStorage.removeItem(key);
   }
 }

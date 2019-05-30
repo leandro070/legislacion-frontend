@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/models/user';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { User } from 'src/models/user';
 export class AuthenticationService {
   urlBase = environment.urlBase;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private storage: StorageService) { }
 
   /**
    * LoginUser hace el inicio de sesion del usuario
@@ -25,5 +26,9 @@ export class AuthenticationService {
    */
   public LogoutUser() {
     localStorage.clear();
+  }
+
+  public getToken() {
+    return this.storage.getValue('token');
   }
 }
