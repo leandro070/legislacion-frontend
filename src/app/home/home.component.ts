@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/services/authentication.service';
 import { StorageService } from 'src/services/storage.service';
 import { User } from 'src/models/user';
-import { userInfo } from 'os';
 import { FilesService } from 'src/services/files.service';
 import { File } from 'src/models/files';
 
@@ -64,5 +63,10 @@ export class HomeComponent implements OnInit {
       this.authServ.LogoutUser();
       this.user = null;
     }
+  }
+
+  deleteFile(file: File) {
+    // this.files = this.files.filter(files => files !== file);  // Elimina el 'file' seleccionado de 'files'
+    this.filesServ.DeleteFile({id: file.id, filename: file.filename});
   }
 }

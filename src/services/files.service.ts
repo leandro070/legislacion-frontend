@@ -32,4 +32,13 @@ export class FilesService {
       saveAs(response, params.filename);
     });
   }
+
+  /**
+   * DeleteFile elimina el archivo solicitado del server
+   */
+  public DeleteFile(params: {id: number, filename: string}) {
+    const url = this.urlBase + '/files/' + params.id;
+
+    return this.http.delete(url).subscribe();
+  }
 }
