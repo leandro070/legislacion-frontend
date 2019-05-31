@@ -7,20 +7,35 @@
     <div class="col-sm-9">
       <div class="card">
         <div class="card-body">
+
+          <div *ngIf="user" >
+            <h3>Subir Archivo</h3>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <button class="btn btn-primary" id="upArchivo">Subir</button>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="nameFile" >
+                <label class="custom-file-label" for="nameFile">Seleccionar Archivo</label>
+              </div>
+            </div>
+            <br><br>
+          </div>
+
           <h2>Archivos disponibles</h2>
 
-            <ul class="list-group" *ngIf="files">
-              <li class="list-group-item" *ngFor="let file of files">
-                {{file.label}}
-                <div class="btn-group float-right" role="group" aria-label="Basic example">
-                  <button type="button" class="btn btn-success" (click)="downloadFile(file)"><i class="fa fa-download"></i>Descargar</button>
-                  <div *ngIf="user">
-                    <button type="button" class="btn btn-primary"><i class="fas fa-edit"></i>Editar</button>
-                    <button type="button" class="btn btn-danger" (click)="deleteFile(file)"><i class="fas fa-trash-alt"></i>Eliminar</button>
-                  </div>
+          <ul class="list-group" *ngIf="files">
+            <li class="list-group-item" *ngFor="let file of files">
+              {{file.label}}
+              <div class="btn-group float-right" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-success" (click)="downloadFile(file)"><i class="fa fa-download"></i>Descargar</button>
+                <div *ngIf="user">
+                  <button type="button" class="btn btn-primary"><i class="fas fa-edit"></i>Editar</button>
+                  <button type="button" class="btn btn-danger" (click)="deleteFile(file)"><i class="fas fa-trash-alt"></i>Eliminar</button>
                 </div>
-              </li>
-            </ul>
+              </div>
+            </li>
+          </ul>
 
         </div>
       </div>
