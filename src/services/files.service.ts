@@ -34,6 +34,15 @@ export class FilesService {
   }
 
   /**
+   * UploadFile
+   */
+  public UploadFile(fileFrom) {
+    const url = this.urlBase + '/files';
+
+    return this.http.post(url, fileFrom).toPromise();
+  }
+
+  /**
    * DeleteFile elimina el archivo solicitado del server
    */
   public DeleteFile(params: {id: number, filename: string}) {

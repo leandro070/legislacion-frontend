@@ -18,6 +18,9 @@ export class HomeComponent implements OnInit {
     loading?: boolean
   } = {};
 
+  fileUpload;
+  fileLabelUpload = '';
+
   user: User;
   files: File[];
 
@@ -37,6 +40,19 @@ export class HomeComponent implements OnInit {
     }, err => {
       console.error(err);
     });
+  }
+
+  onFileChange(ev) {
+    this.fileUpload = ev.target.files[0];
+  }
+
+  uploadFile() {
+    const formData = new FormData();
+    const label =
+    formData.append('file', this.fileUpload);
+    formData.append('label', this.fileLabelUpload);
+
+    this.filesServ.UploadFile(formData)
   }
 
   downloadFile(file: File) {

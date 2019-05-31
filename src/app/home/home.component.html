@@ -11,14 +11,14 @@
           <div *ngIf="user" >
             <h3>Subir Archivo</h3>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <button class="btn btn-primary" id="upArchivo">Subir</button>
-              </div>
               <div class="custom-file">
-                <input type="file" class="custom-file-input" id="nameFile" >
-                <label class="custom-file-label" for="nameFile">Seleccionar Archivo</label>
+                <div class="custom-file m-b">
+                  <input id="fileUpload" type="file" class="custom-file-input" (change)="onFileChange($event)">
+                  <label for="fileUpload" class="custom-file-label">{{ (fileUpload && fileUpload.name) ? fileUpload.name : 'Eliga su archivo...'}}</label>
+                </div>
               </div>
             </div>
+            <button class="btn btn-primary" (click)="uploadFile()">Subir</button>
             <br><br>
           </div>
 
