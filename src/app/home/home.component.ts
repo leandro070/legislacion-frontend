@@ -46,13 +46,23 @@ export class HomeComponent implements OnInit {
     this.fileUpload = ev.target.files[0];
   }
 
-  uploadFile() {
+  uploadFile(nameLabel: string) {
+    if (nameLabel === '')  { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
+      const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
+      if (index !== -1) {
+        this.fileLabelUpload = this.fileUpload.name.substr(0, index);
+      } else {
+        this.fileLabelUpload = this.fileUpload.name.substr(0);
+      }
+    } else {
+      this.fileLabelUpload = nameLabel;
+    }
+
     const formData = new FormData();
-    const label =
     formData.append('file', this.fileUpload);
     formData.append('label', this.fileLabelUpload);
 
-    this.filesServ.UploadFile(formData)
+    this.filesServ.UploadFile(formData);
   }
 
   downloadFile(file: File) {

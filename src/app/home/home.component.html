@@ -8,7 +8,7 @@
       <div class="card">
         <div class="card-body">
 
-          <div *ngIf="user" >
+          <div *ngIf="user">
             <h3>Subir Archivo</h3>
             <div class="input-group">
               <div class="custom-file">
@@ -18,8 +18,10 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-primary" (click)="uploadFile()">Subir</button>
-            <br><br>
+            <br>
+            <input type="text" [(ngModel)]="fileLabelUpload" placeholder="nombre del Archivo">
+            <button class="btn btn-primary" (click)="uploadFile(fileLabelUpload)">Agregar Archivo</button>
+            <br><br><br>
           </div>
 
           <h2>Archivos disponibles</h2>
