@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteFile(file: File) {
-    // this.files = this.files.filter(files => files !== file);  // Elimina el 'file' seleccionado de 'files'
+    this.files = this.files.filter(files => files !== file);  // Elimina el 'file' seleccionado de 'files'
     this.filesServ.DeleteFile({id: file.id, filename: file.filename});
   }
 }
