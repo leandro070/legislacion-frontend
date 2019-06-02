@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { File } from 'src/models/files';
+import { IFile } from 'src/models/files';
 import { saveAs } from 'file-saver';
 
 @Injectable({
@@ -15,10 +15,10 @@ export class FilesService {
   /**
    * ListFiles
    */
-  public ListFiles(): Promise<File[]> {
+  public ListFiles(): Promise<IFile[]> {
     const url = this.urlBase + '/files';
 
-    return this.http.get<File[]>(url).toPromise();
+    return this.http.get<IFile[]>(url).toPromise();
   }
 
   /**
@@ -36,10 +36,10 @@ export class FilesService {
   /**
    * UploadFile
    */
-  public UploadFile(fileFrom) {
+  public UploadFile(fileFrom): Promise<IFile> {
     const url = this.urlBase + '/files';
 
-    return this.http.post(url, fileFrom).toPromise();
+    return this.http.post<IFile>(url, fileFrom).toPromise();
   }
 
   /**
