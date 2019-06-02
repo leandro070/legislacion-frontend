@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
     loading?: boolean
   } = {};
 
-  fileUpload;
+  fileUpload: File;
   fileLabelUpload = '';
 
   user: User;
@@ -56,21 +56,20 @@ export class HomeComponent implements OnInit {
     this.fileLabelUpload = '';
   }
 
-  uploadFile(nameLabel: string) {
-    if (nameLabel === '')  { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
+  uploadFile() {
+    if (this.fileLabelUpload == '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
       const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
       if (index !== -1) {
         this.fileLabelUpload = this.fileUpload.name.substr(0, index);
       } else {
         this.fileLabelUpload = this.fileUpload.name.substr(0);
       }
-    } else {
-      this.fileLabelUpload = nameLabel;
     }
-
     const formData = new FormData();
     formData.append('file', this.fileUpload);
     formData.append('label', this.fileLabelUpload);
+    console.log(formData);
+
     this.filesServ.UploadFile(formData);
   }
 
