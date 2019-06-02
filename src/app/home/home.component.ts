@@ -71,7 +71,9 @@ export class HomeComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', this.fileUpload);
     formData.append('label', this.fileLabelUpload);
-    this.filesServ.UploadFile(formData);
+    this.filesServ.UploadFile(formData).then(
+    (file: File) => {this.files.push(file);}
+    );
   }
 
   downloadFile(file: File) {
