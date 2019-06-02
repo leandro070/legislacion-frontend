@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
 
   onFileChange(ev) {
     this.fileUpload = ev.target.files[0];
+    this.fileLabelUpload = '';
   }
 
   uploadFile(nameLabel: string) {
@@ -61,7 +62,6 @@ export class HomeComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', this.fileUpload);
     formData.append('label', this.fileLabelUpload);
-
     this.filesServ.UploadFile(formData);
   }
 
@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteFile(file: File) {
-    this.files = this.files.filter(files => files !== file);  // Elimina el 'file' seleccionado de 'files'
     this.filesServ.DeleteFile({id: file.id, filename: file.filename});
+    this.listFiles();
   }
 }

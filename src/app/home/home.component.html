@@ -8,21 +8,27 @@
       <div class="card">
         <div class="card-body">
 
-          <div *ngIf="user">
-            <h3>Subir Archivo</h3>
-            <div class="input-group">
-              <div class="custom-file">
-                <div class="custom-file m-b">
-                  <input id="fileUpload" type="file" class="custom-file-input" (change)="onFileChange($event)">
-                  <label for="fileUpload" class="custom-file-label">{{ (fileUpload && fileUpload.name) ? fileUpload.name : 'Eliga su archivo...'}}</label>
+            <div >
+              <h3>Subir Archivo</h3>
+              <div class="input-group">
+                <div class="custom-file">
+                  <div class="custom-file m-b">
+                    <label class="btn btn-secondary" for="my-file-selector">
+                      <input id="my-file-selector" type="file" class="d-none" (change)="onFileChange($event)">
+                      Elegir Archivo
+                    </label>
+                  </div>
                 </div>
               </div>
+              <br>
+              <div class="custom-file m-b">
+                <input type="text"  class="custom-file"  [(ngModel)]="fileLabelUpload" placeholder="{{ (fileUpload && fileUpload.name) ? fileUpload.name : 'Eliga su archivo...'}}">
+              </div>
+              <div class="custom-file m-b">
+                <button class="btn btn-primary" (click)="uploadFile(fileLabelUpload)">Agregar Archivo</button>
+              </div>
+              <br><br><br>
             </div>
-            <br>
-            <input type="text" [(ngModel)]="fileLabelUpload" placeholder="nombre del Archivo">
-            <button class="btn btn-primary" (click)="uploadFile(fileLabelUpload)">Agregar Archivo</button>
-            <br><br><br>
-          </div>
 
           <h2>Archivos disponibles</h2>
 
