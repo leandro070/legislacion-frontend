@@ -22,6 +22,27 @@ export class AuthenticationService {
   }
 
   /**
+   * ValidateToken
+   */
+  public ValidateToken(): Promise<User> {
+    return new Promise((resolve, reject) => {
+      const url = this.urlBase + '/userByToken';
+      const token = this.getToken();
+      if (!token) {
+        reject(null);
+      }
+      this.http.get<User>(url).toPromise()
+      .then((user) => {
+        if(user) {
+          resolve(user);
+        }
+      }, err => {
+        reject(err.errors);
+      });
+    });
+  }
+
+  /**
    * LogoutUser hace el cierre de sesion en el servidor
    */
   public LogoutUser() {
