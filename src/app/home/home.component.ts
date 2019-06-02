@@ -4,6 +4,7 @@ import { StorageService } from 'src/services/storage.service';
 import { User } from 'src/models/user';
 import { FilesService } from 'src/services/files.service';
 import { IFile } from 'src/models/files';
+import { LoaderController } from '../layouts/loader/loader.controller';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private authServ: AuthenticationService,
     private storage: StorageService,
-    private filesServ: FilesService
+    private filesServ: FilesService,
+    private loaderCtrl: LoaderController
     ) { }
 
   ngOnInit() {
@@ -36,9 +38,12 @@ export class HomeComponent implements OnInit {
   }
 
   validateToken() {
+    this.loaderCtrl.show();
     this.authServ.ValidateToken().then((user) => {
+      this.loaderCtrl.hide();
       this.user = user;
     }).catch((err) => {
+      this.loaderCtrl.hide();
       console.log('usuario no logueado', err);
     });
   }
@@ -80,6 +85,7 @@ export class HomeComponent implements OnInit {
   }
 
   login() {
+    this.loaderCtrl.show();
     if (this.loginData.password && this.loginData.username) {
       this.loginData.loading = true;
       this.authServ.LoginUser({username: this.loginData.username, password: this.loginData.password})
@@ -87,9 +93,11 @@ export class HomeComponent implements OnInit {
         this.storage.setValue('token', user.token);
         this.user = user;
         this.loginData.loading = false;
+        this.loaderCtrl.hide();
       }, err => {
         this.loginData.loading = false;
         console.error(err);
+        this.loaderCtrl.hide();
       });
     }
   }

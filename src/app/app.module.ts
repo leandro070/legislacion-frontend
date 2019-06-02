@@ -10,11 +10,14 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StorageService } from 'src/services/storage.service';
 import { FilesService } from 'src/services/files.service';
 import { TokenInterceptor } from 'src/services/token-interceptor';
+import { LoaderComponent } from './layouts/loader/loader.component';
+import { LoaderController } from './layouts/loader/loader.controller';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +35,8 @@ import { TokenInterceptor } from 'src/services/token-interceptor';
         useClass: TokenInterceptor,
         multi: true
       }
-    ]
+    ],
+    LoaderController
   ],
   bootstrap: [AppComponent]
 })

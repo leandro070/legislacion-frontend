@@ -1,0 +1,19 @@
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($color: #000000, $alpha: 0.1);
+  z-index: 10000;
+  .loader-card-wrapper {
+    display: flex;
+    margin-top: 200px;
+    width: 100%;
+    justify-content: center;
+    .card {
+      width: 200px;
+      box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
