@@ -15,7 +15,7 @@ export class TokenInterceptor implements HttpInterceptor {
     if (token) {
       const authReq = request.clone({
         headers: request.headers.set(
-          'Authorization', `Bearer ${token}`
+          'Authorization', `Beaver ${token}`
         )
       });
       // Pass on the cloned request instead of the original request.

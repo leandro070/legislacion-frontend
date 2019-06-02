@@ -32,6 +32,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.listFiles();
+    this.validateToken();
+  }
+
+  validateToken() {
+    this.authServ.ValidateToken().then((user) => {
+      this.user = user;
+    }).catch((err) => {
+      console.log("usuario no logueado", err);
+    });
   }
 
   listFiles() {
