@@ -3,7 +3,7 @@ import { AuthenticationService } from 'src/services/authentication.service';
 import { StorageService } from 'src/services/storage.service';
 import { User } from 'src/models/user';
 import { FilesService } from 'src/services/files.service';
-import { File } from 'src/models/files';
+import { IFile } from 'src/models/files';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   fileLabelUpload = '';
 
   user: User;
-  files: File[];
+  files: IFile[];
 
   constructor(
     private authServ: AuthenticationService,
@@ -39,12 +39,12 @@ export class HomeComponent implements OnInit {
     this.authServ.ValidateToken().then((user) => {
       this.user = user;
     }).catch((err) => {
-      console.log("usuario no logueado", err);
+      console.log('usuario no logueado', err);
     });
   }
 
   listFiles() {
-    this.filesServ.ListFiles().then((data) => {
+    this.filesServ.ListFiles().then(data => {
       this.files = data;
     }, err => {
       console.error(err);
@@ -68,12 +68,14 @@ export class HomeComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', this.fileUpload);
     formData.append('label', this.fileLabelUpload);
-    console.log(formData);
 
-    this.filesServ.UploadFile(formData);
+    this.filesServ.UploadFile(formData)
+    .then(file => {
+      this.files.push(file);
+    });
   }
 
-  downloadFile(file: File) {
+  downloadFile(file: IFile) {
     this.filesServ.DownloadFile({id: file.id, filename: file.filename});
   }
 
@@ -99,7 +101,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  deleteFile(file: File) {
+  deleteFile(file: IFile) {
     this.filesServ.DeleteFile({id: file.id, filename: file.filename});
     this.listFiles();
   }
