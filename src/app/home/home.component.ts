@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
     this.authServ.ValidateToken().then((user) => {
       this.user = user;
     }).catch((err) => {
-      console.log("usuario no logueado", err);
+      console.log('usuario no logueado', err);
     });
   }
 
