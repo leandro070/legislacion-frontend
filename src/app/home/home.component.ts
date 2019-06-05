@@ -88,7 +88,9 @@ export class HomeComponent implements OnInit {
 
   uploadFile() {
     this.loaderCtrl.show();
-    if (this.fileLabelUpload == '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
+    if (this.fileUpload === null) {return; }
+
+    if (this.fileLabelUpload === '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
       const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
       if (index !== -1) {
         this.fileLabelUpload = this.fileUpload.name.substr(0, index);
@@ -168,7 +170,10 @@ export class HomeComponent implements OnInit {
   }
 
   deleteFile(file: IFile): Promise<any> {
-    return this.filesServ.DeleteFile({id: file.id, filename: file.filename});
+    return this.filesServ.DeleteFile({id: file.id, filename: file.filename})
+    .then(() => {
+       this.files = this.files.filter(f => f !== file);
+    });
   }
 
   errorAlert(message: string) {
