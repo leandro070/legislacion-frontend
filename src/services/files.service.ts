@@ -48,6 +48,6 @@ export class FilesService {
   public DeleteFile(params: {id: number, filename: string}) {
     const url = this.urlBase + '/files/' + params.id;
 
-    return this.http.delete(url).subscribe();
+    return this.http.delete(url).toPromise();
   }
 }
