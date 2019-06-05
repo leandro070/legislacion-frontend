@@ -5,6 +5,7 @@ import { User } from 'src/models/user';
 import { FilesService } from 'src/services/files.service';
 import { IFile } from 'src/models/files';
 import { LoaderController } from '../layouts/loader/loader.controller';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,6 @@ export class HomeComponent implements OnInit {
   loginData: {
     username?: string,
     password?: string,
-    loading?: boolean
   } = {};
 
   fileUpload: File;
@@ -52,16 +52,42 @@ export class HomeComponent implements OnInit {
     this.filesServ.ListFiles().then(data => {
       this.files = data;
     }, err => {
-      console.error(err);
+      this.errorAlert(err.error.error);
     });
   }
 
   onFileChange(ev) {
     this.fileUpload = ev.target.files[0];
-    this.fileLabelUpload = '';
+  }
+
+  async editFile(file: IFile) {
+    const {value: filelabel} = await Swal.fire({
+      title: 'Escriba un nuevo nombre al archivo',
+      input: 'text',
+      inputValue: file.label,
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'No puede dejar el nombre vacio';
+        }
+      }
+    });
+
+    if (filelabel) {
+      this.filesServ.UpdateFile({id: file.id, label: filelabel}).then(file => {
+        Swal.fire(`Archivo modificado con éxito`);
+        const i = this.files.findIndex(f => f.id == file.id);
+        if (i >= 0) {
+          this.files[i].label = filelabel;
+        }
+      }, err => {
+        this.errorAlert(err.error.error);
+      });
+    }
   }
 
   uploadFile() {
+    this.loaderCtrl.show();
     if (this.fileLabelUpload == '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
       const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
       if (index !== -1) {
@@ -76,7 +102,13 @@ export class HomeComponent implements OnInit {
 
     this.filesServ.UploadFile(formData)
     .then(file => {
+      this.loaderCtrl.hide();
       this.files.push(file);
+      this.fileUpload = null;
+      this.fileLabelUpload = '';
+    }, err => {
+      this.loaderCtrl.hide();
+      this.errorAlert(err.error.error);
     });
   }
 
@@ -87,16 +119,13 @@ export class HomeComponent implements OnInit {
   login() {
     this.loaderCtrl.show();
     if (this.loginData.password && this.loginData.username) {
-      this.loginData.loading = true;
       this.authServ.LoginUser({username: this.loginData.username, password: this.loginData.password})
       .then((user) => {
         this.storage.setValue('token', user.token);
         this.user = user;
-        this.loginData.loading = false;
         this.loaderCtrl.hide();
       }, err => {
-        this.loginData.loading = false;
-        console.error(err);
+        this.errorAlert(err.error.error);
         this.loaderCtrl.hide();
       });
     }
@@ -109,8 +138,45 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  deleteFile(file: IFile) {
-    this.filesServ.DeleteFile({id: file.id, filename: file.filename});
-    this.listFiles();
+  confirmDeleteFile(file: IFile) {
+    Swal.fire({
+      title: 'Eliminar archivo',
+      text: '¿Estás seguro que desesa eliminar?',
+      type: 'question',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+          return this.deleteFile(file)
+          .then(data => {
+            console.log(data);
+          }).catch((err) => {
+            Swal.fire({
+              type: 'error',
+              title: err.err.err
+            });
+          });
+      }
+    }).then((data) => {
+      Swal.fire({
+        title: 'Exito!',
+        text: 'Archivo borrado con exito.',
+        confirmButtonText: 'Aceptar',
+        })
+    });
+  }
+
+  deleteFile(file: IFile): Promise<any> {
+    return this.filesServ.DeleteFile({id: file.id, filename: file.filename});
+  }
+
+  errorAlert(message: string) {
+    Swal.fire({
+      title: 'Error!',
+      text: message,
+      type: 'error',
+      confirmButtonText: 'Continuar'
+    });
   }
 }

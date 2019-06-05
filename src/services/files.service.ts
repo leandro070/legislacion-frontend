@@ -45,9 +45,15 @@ export class FilesService {
   /**
    * DeleteFile elimina el archivo solicitado del server
    */
-  public DeleteFile(params: {id: number, filename: string}) {
+  public DeleteFile(params: {id: number, filename: string}): Promise<any> {
     const url = this.urlBase + '/files/' + params.id;
 
-    return this.http.delete(url).subscribe();
+    return this.http.delete(url).toPromise();
+  }
+
+  public UpdateFile(params: {id: number, label: string}): Promise<IFile> {
+    const url = this.urlBase + '/files/' + params.id;
+
+    return this.http.put<IFile>(url, {label: params.label}).toPromise();
   }
 }
