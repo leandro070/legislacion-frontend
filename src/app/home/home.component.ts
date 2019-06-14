@@ -5,7 +5,7 @@ import { User } from 'src/models/user';
 import { FilesService } from 'src/services/files.service';
 import { IFile } from 'src/models/files';
 import { LoaderController } from '../layouts/loader/loader.controller';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
     password?: string,
   } = {};
 
-  fileUpload: File;
+  fileUpload: File = null;
   fileLabelUpload = '';
 
   user: User;
@@ -87,8 +87,9 @@ export class HomeComponent implements OnInit {
   }
 
   uploadFile() {
+    if (this.fileUpload === null) {return; } // Si no ah seleccionado ningun archivo sale
+
     this.loaderCtrl.show();
-    if (this.fileUpload === null) {return; }
 
     if (this.fileLabelUpload === '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
       const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
@@ -98,6 +99,7 @@ export class HomeComponent implements OnInit {
         this.fileLabelUpload = this.fileUpload.name.substr(0);
       }
     }
+
     const formData = new FormData();
     formData.append('file', this.fileUpload);
     formData.append('label', this.fileLabelUpload);
