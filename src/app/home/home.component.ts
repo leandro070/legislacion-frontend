@@ -145,7 +145,7 @@ export class HomeComponent implements OnInit {
   confirmDeleteFile(file: IFile) {
     Swal.fire({
       title: 'Eliminar archivo',
-      text: '¿Estás seguro que desesa eliminar?',
+      text: '¿Estás seguro que desea eliminar?',
       type: 'question',
       confirmButtonText: 'Continuar',
       cancelButtonText: 'Cancelar',
