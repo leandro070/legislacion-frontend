@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
     password?: string,
   } = {};
 
-  fileUpload: File = null;
+  fileUpload: File;
   fileLabelUpload = '';
 
   user: User;
@@ -87,33 +87,32 @@ export class HomeComponent implements OnInit {
   }
 
   uploadFile() {
-    if (!this.fileUpload) {return; } // Si no ah seleccionado ningun archivo sale
-
-    this.loaderCtrl.show();
-
-    if (this.fileLabelUpload === '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
-      const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
-      if (index !== -1) {
-        this.fileLabelUpload = this.fileUpload.name.substr(0, index);
-      } else {
-        this.fileLabelUpload = this.fileUpload.name.substr(0);
+    if (this.fileUpload) {
+      this.loaderCtrl.show();
+      if (this.fileLabelUpload === '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
+        const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
+        if (index !== -1) {
+          this.fileLabelUpload = this.fileUpload.name.substr(0, index);
+        } else {
+          this.fileLabelUpload = this.fileUpload.name.substr(0);
+        }
       }
+
+      const formData = new FormData();
+      formData.append('file', this.fileUpload);
+      formData.append('label', this.fileLabelUpload);
+
+      this.filesServ.UploadFile(formData)
+      .then(file => {
+        this.loaderCtrl.hide();
+        this.files.push(file);
+        this.fileUpload = null;
+        this.fileLabelUpload = '';
+      }, err => {
+        this.loaderCtrl.hide();
+        this.errorAlert(err.error.error);
+      });
     }
-
-    const formData = new FormData();
-    formData.append('file', this.fileUpload);
-    formData.append('label', this.fileLabelUpload);
-
-    this.filesServ.UploadFile(formData)
-    .then(file => {
-      this.loaderCtrl.hide();
-      this.files.push(file);
-      this.fileUpload = null;
-      this.fileLabelUpload = '';
-    }, err => {
-      this.loaderCtrl.hide();
-      this.errorAlert(err.error.error);
-    });
   }
 
   downloadFile(file: IFile) {
