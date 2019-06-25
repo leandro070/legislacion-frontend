@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
   }
 
   uploadFile() {
-    if (this.fileUpload === null) {return; } // Si no ah seleccionado ningun archivo sale
+    if (!this.fileUpload) {return; } // Si no ah seleccionado ningun archivo sale
 
     this.loaderCtrl.show();
 
