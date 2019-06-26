@@ -162,11 +162,13 @@ export class HomeComponent implements OnInit {
           });
       }
     }).then((data) => {
-      Swal.fire({
-        title: 'Exito!',
-        text: 'Archivo borrado con exito.',
-        confirmButtonText: 'Aceptar',
-        })
+      if (!data.dismiss) {
+        Swal.fire({
+          title: 'Exito!',
+          text: 'Archivo borrado con exito.',
+          confirmButtonText: 'Aceptar',
+          })
+      }
     });
   }
 
