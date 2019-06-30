@@ -1,8 +1,195 @@
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Legislación   <small>v0.0.1</small></a>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#">
+      <img src="assets/logo.png" height="42">
+    </a>
+  </div>
 </nav>
+<section class="hero is-primary">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Sistema de administración de documentos
+      </h1>
+      <h2 class="subtitle">
+        Plataforma educativa para los profesores y alumnos de la Universidad Tecnológica Nacional Regional Mendoza
+      </h2>
+    </div>
+  </div>
+</section>
 
-<div class="container">
+<div class="columns">
+  <div class="column is-hidden-tablet">
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <h5 class="title is-5">INGRESO</h5>
+              <p *ngIf="!user" class="subtitle is-6">Use su usuario y contraseña para modificar los archivos</p>
+
+              <div *ngIf="!user" class="control has-icons-left has-icons-right">
+                <input class="input" type="text" placeholder="Usuario" [(ngModel)]="loginData.username">
+                <span class="icon is-small is-left">
+                  <i class="far fa-user"></i>
+                </span>
+              </div>
+
+              <div *ngIf="!user" class="control has-icons-left has-icons-right"
+                style="margin-top: 8px; margin-bottom: 16px;">
+                <input class="input" type="password" placeholder="Contraseña" [(ngModel)]="loginData.password">
+                <span class="icon is-small is-left">
+                  <i class="far fa-user"></i>
+                </span>
+              </div>
+
+              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" (click)="login()">Ingresar</a>
+
+              <p *ngIf="user" class="subtitle is-6">Iniciaste sesión como {{user.fullname}}</p>
+              <a *ngIf="user" class="button is-primary is-rounded is-fullwidth" (click)="logout()">Cerrar Sesión</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="column is-three-quarters">
+    <section class="section" *ngIf="user">
+      <div class="container">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <h1 class="title">Subir nuevo archivo</h1>
+              <p class="subtitle is-5">Para agregar un nuevo archivo siga las siguientes instrucciones:</p>
+              <br>
+              <p class="subtitle is-6">1) Seleccione el archivo a subir dando click en el siguiente boton</p>
+              <div class="file has-name">
+                <label class="file-label">
+                  <input class="file-input" type="file" name="resume" (change)="onFileChange($event)">
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      Seleccione un archivo
+                    </span>
+                  </span>
+                  <span class="file-name" *ngIf="fileUpload">
+                    {{fileUpload.name}}
+                  </span>
+                </label>
+              </div>
+              <br>
+              <p class="subtitle is-6">2) Asignele un nombre al archivo</p>
+              <div class="field">
+                <div class="control">
+                  <input class="input is-primary" type="text" placeholder="Nombre del archivo">
+                </div>
+              </div>
+
+              <br>
+              <p class="subtitle is-6">3) Haga click en subir archivo para finalizar</p>
+              <button class="button is-primary is-rounded" [disabled]="!fileUpload" (click)="login()">Subir
+                archivo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <h1 class="title">Archivos disponibles</h1>
+              <nav class="level" *ngFor="let file of files">
+                <!-- Left side -->
+                <div class="level-left">
+                  <div class="level-item">
+                    <p class="subtitle is-5">{{file.label}}</p>
+                  </div>
+                </div>
+
+                <!-- Right side -->
+                <div class="level-right">
+                  <div class="level-item">
+                    <div class="field has-addons">
+                      <p class="control">
+                        <a class="button is-primary" (click)="downloadFile(file)">
+                          <span class="icon is-small">
+                            <i class="fas fa-download"></i>
+                          </span>
+                          <span>Descargar</span>
+                        </a>
+                      </p>
+                      <p class="control">
+                        <a class="button is-info" (click)="editFile(file)">
+                          <span class="icon is-small">
+                            <i class="fas fa-edit"></i>
+                          </span>
+                          <span>Editar</span>
+                        </a>
+                      </p>
+                      <p class="control" (click)="confirmDeleteFile(file)">
+                        <a class="button is-danger">
+                          <span class="icon is-small">
+                            <i class="fas fa-trash-alt"></i>
+                          </span>
+                          <span>Eliminar</span>
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="column is-hidden-mobile">
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <h5 class="title is-5">INGRESO</h5>
+              <p *ngIf="!user" class="subtitle is-6">Use su usuario y contraseña para modificar los archivos</p>
+
+              <div *ngIf="!user" class="control has-icons-left has-icons-right">
+                <input class="input" type="text" placeholder="Usuario" [(ngModel)]="loginData.username">
+                <span class="icon is-small is-left">
+                  <i class="far fa-user"></i>
+                </span>
+              </div>
+
+              <div *ngIf="!user" class="control has-icons-left has-icons-right"
+                style="margin-top: 8px; margin-bottom: 16px;">
+                <input class="input" type="password" placeholder="Contraseña" [(ngModel)]="loginData.password">
+                <span class="icon is-small is-left">
+                  <i class="far fa-user"></i>
+                </span>
+              </div>
+
+              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" (click)="login()">Ingresar</a>
+
+              <p *ngIf="user" class="subtitle is-6">Iniciaste sesión como {{user.fullname}}</p>
+              <a *ngIf="user" class="button is-primary is-rounded is-fullwidth" (click)="logout()">Cerrar Sesión</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+
+<!--
+  <div class="container">
   <div class="row">
     <div class="col-sm-9">
       <div class="card">
@@ -50,28 +237,4 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
-      <div class="card">
-        <div class="card-body" *ngIf="!user">
-          <h5 class="card-title">Ingreso para el profesor</h5>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Usuario" [(ngModel)]="loginData.username">
-          </div>
-          <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Contraseña" [(ngModel)]="loginData.password">
-          </div>
-
-          <button type="button" class="btn btn-primary btn-block" (click)="login()">Ingresar</button>
-        </div>
-
-        <div class="card-body" *ngIf="user">
-          <p>Inició sesión como:</p>
-          <h5 class="card-title">{{user.fullname}}</h5>
-          <button type="button" class="btn btn-primary btn-block" (click)="logout()">Cerrar Sesión</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<loader></loader>
+ -->
