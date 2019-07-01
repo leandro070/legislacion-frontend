@@ -25,11 +25,14 @@ export class FilesService {
    * DownloadFile descarga los archivos solicitados en el server
    */
   public DownloadFile(params: {id: number, filename: string}) {
-    const url = this.urlBase + '/download/' + params.id;
+    return new Promise((resolve, reject) => {
+      const url = this.urlBase + '/download/' + params.id;
 
-    return this.http.get(url, {responseType: 'blob' as 'json'})
-    .subscribe((response: Response) => {
-      saveAs(response, params.filename);
+      this.http.get(url, {responseType: 'blob' as 'json'})
+      .subscribe((response: Response) => {
+        resolve()
+        saveAs(response, params.filename);
+      });
     });
   }
 

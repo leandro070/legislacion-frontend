@@ -6,6 +6,7 @@ import { FilesService } from 'src/services/files.service';
 import { IFile } from 'src/models/files';
 import { LoaderController } from '../layouts/loader/loader.controller';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -34,10 +35,14 @@ export class HomeComponent implements OnInit {
   constructor(
     private authServ: AuthenticationService,
     private storage: StorageService,
-    private filesServ: FilesService
-    ) { }
+    private filesServ: FilesService,
+    private toastr: ToastrService,
+    private loader: LoaderController
+    ) {
+    }
 
   ngOnInit() {
+    this.loader.show();
     this.listFiles();
     this.validateToken();
   }
@@ -53,7 +58,9 @@ export class HomeComponent implements OnInit {
   listFiles() {
     this.filesServ.ListFiles().then(data => {
       this.files = data;
+      this.loader.hide();
     }, err => {
+      this.loader.hide();
       this.errorAlert(err.error.error);
     });
   }
@@ -100,6 +107,13 @@ export class HomeComponent implements OnInit {
         }
       }
 
+      this.toastr.info('No cierres la pestaña o el navegador, el archivo se está subiendo y puede demorar un poco.', 'Cuidado!', {
+        closeButton: true,
+        positionClass: 'toast-bottom-full-width',
+        timeOut: 10000,
+        extendedTimeOut: 5000
+      });
+
       const formData = new FormData();
       formData.append('file', this.fileUpload);
       formData.append('label', this.fileLabelUpload);
@@ -119,7 +133,16 @@ export class HomeComponent implements OnInit {
   }
 
   downloadFile(file: IFile) {
-    this.filesServ.DownloadFile({id: file.id, filename: file.filename});
+    this.toastr.info('No cierres la pestaña o el navegador, el archivo se está descargando y puede demorar un poco.', 'Cuidado!', {
+      closeButton: true,
+      positionClass: 'toast-bottom-full-width',
+      timeOut: 10000,
+      extendedTimeOut: 5000
+    });
+    this.buttonStates[file.id] = true;
+    this.filesServ.DownloadFile({id: file.id, filename: file.filename}).then((data) => {
+      this.buttonStates[file.id] = false;
+    });
   }
 
   login() {

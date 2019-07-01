@@ -12,6 +12,8 @@ import { FilesService } from 'src/services/files.service';
 import { TokenInterceptor } from 'src/services/token-interceptor';
 import { LoaderComponent } from './layouts/loader/loader.component';
 import { LoaderController } from './layouts/loader/loader.controller';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -21,9 +23,11 @@ import { LoaderController } from './layouts/loader/loader.controller';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     AuthenticationService,

@@ -43,7 +43,7 @@
                 </span>
               </div>
 
-              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" [ngClass]="{'is-loading': buttonStates.login == true}" (click)="login()">Ingresar</a>
+              <button *ngIf="!user" class="button is-primary is-rounded is-fullwidth" [disabled]="buttonStates.login == true" [ngClass]="{'is-loading': buttonStates.login == true}" (click)="login()">Ingresar</button>
 
               <p *ngIf="user" class="subtitle is-6">Iniciaste sesión como {{user.fullname}}</p>
               <a *ngIf="user" class="button is-primary is-rounded is-fullwidth" (click)="logout()">Cerrar Sesión</a>
@@ -60,9 +60,9 @@
           <div class="card-content">
             <div class="content">
               <h1 class="title">Subir nuevo archivo</h1>
-              <p class="subtitle is-5">Para agregar un nuevo archivo siga las siguientes instrucciones:</p>
+              <p class="subtitle is-5">Para agregar un nuevo archivo sigie las siguientes instrucciones:</p>
               <br>
-              <p class="subtitle is-6">1) Seleccione el archivo a subir dando click en el siguiente boton</p>
+              <p class="subtitle is-6">1) Seleccione el archivo a subir dando click en el botón "Seleccione un archivo"</p>
               <div class="file has-name">
                 <label class="file-label">
                   <input class="file-input" type="file" name="resume" (change)="onFileChange($event)">
@@ -80,16 +80,16 @@
                 </label>
               </div>
               <br>
-              <p class="subtitle is-6">2) Asignele un nombre al archivo</p>
+              <p class="subtitle is-6">2) Asigne un nombre al archivo</p>
               <div class="field">
                 <div class="control">
-                  <input class="input is-primary" type="text" placeholder="Nombre del archivo">
+                  <input class="input is-primary" type="text" placeholder="Nombre del archivo" [(ngModel)]="fileLabelUpload">
                 </div>
               </div>
 
               <br>
-              <p class="subtitle is-6">3) Haga click en subir archivo para finalizar</p>
-              <button class="button is-primary is-rounded" [ngClass]="{'is-loading': buttonStates.newFile == true}" [disabled]="!fileUpload" (click)="uploadFile()">Subir
+              <p class="subtitle is-6">3) Haga click en el botón "Subir archivo" para finalizar</p>
+              <button class="button is-primary is-rounded" [disabled]="buttonStates.newFile == true" [ngClass]="{'is-loading': buttonStates.newFile == true}" (click)="uploadFile()">Subir
                 archivo</button>
             </div>
           </div>
@@ -103,6 +103,11 @@
           <div class="card-content">
             <div class="content">
               <h1 class="title">Archivos disponibles</h1>
+              <p class="subtitle is-6" style="margin-top: 16px;" *ngIf="!files || (files && files.length == 0)">
+                <i class="far fa-file"></i>
+                No hay archivos disponibles en este momento.
+              </p>
+
               <nav class="level" *ngFor="let file of files">
                 <!-- Left side -->
                 <div class="level-left">
@@ -116,14 +121,15 @@
                   <div class="level-item">
                     <div class="field has-addons">
                       <p class="control">
-                        <a class="button is-primary" (click)="downloadFile(file)">
+                        <button class="button is-primary" [disabled]="buttonStates[file.id] == true"
+                          [ngClass]="{'is-loading': buttonStates[file.id] == true}" (click)="downloadFile(file)">
                           <span class="icon is-small">
                             <i class="fas fa-download"></i>
                           </span>
                           <span>Descargar</span>
-                        </a>
+                        </button>
                       </p>
-                      <p class="control">
+                      <p class="control" *ngIf="user">
                         <a class="button is-info" (click)="editFile(file)">
                           <span class="icon is-small">
                             <i class="fas fa-edit"></i>
@@ -131,8 +137,8 @@
                           <span>Editar</span>
                         </a>
                       </p>
-                      <p class="control" (click)="confirmDeleteFile(file)">
-                        <a class="button is-danger">
+                      <p class="control" *ngIf="user">
+                        <a class="button is-danger" (click)="confirmDeleteFile(file)">
                           <span class="icon is-small">
                             <i class="fas fa-trash-alt"></i>
                           </span>
@@ -143,6 +149,7 @@
                   </div>
                 </div>
               </nav>
+
             </div>
           </div>
         </div>
@@ -174,7 +181,7 @@
                 </span>
               </div>
 
-              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" [ngClass]="{'is-loading': buttonStates.login == true}" (click)="login()">Ingresar</a>
+              <button *ngIf="!user" class="button is-primary is-rounded is-fullwidth" [ngClass]="{'is-loading': buttonStates.login == true}" [disabled]="buttonStates.login == true" (click)="login()">Ingresar</button>
 
               <p *ngIf="user" class="subtitle is-6">Iniciaste sesión como {{user.fullname}}</p>
               <a *ngIf="user" class="button is-primary is-rounded is-fullwidth" (click)="logout()">Cerrar Sesión</a>
@@ -187,54 +194,4 @@
 </div>
 
 
-
-<!--
-  <div class="container">
-  <div class="row">
-    <div class="col-sm-9">
-      <div class="card">
-        <div class="card-body">
-
-          <div *ngIf="user">
-            <h3>Subir Archivo</h3>
-
-            <div class="input-group mb-1">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="nombre-archivo">Nombre del archivo</span>
-              </div>
-              <input type="text" class="form-control" placeholder="Nombre del archivo" aria-label="Nombre del archivo"
-                aria-describedby="nombre-archivo" [(ngModel)]="fileLabelUpload">
-            </div>
-
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="select-file" (change)="onFileChange($event)" aria-describedby="inputGroupFileAddon01">
-              <label class="custom-file-label" for="select-file">{{fileUpload ? fileUpload.name : 'Seleccione un archivo'}}</label>
-            </div>
-
-            <div class="custom-file mt-3">
-              <button class="btn btn-primary" (click)="uploadFile()">Agregar Archivo</button>
-            </div>
-            <br><br><br>
-          </div>
-
-          <h2>Archivos disponibles</h2>
-
-          <ul class="list-group" *ngIf="files">
-            <li class="list-group-item" *ngFor="let file of files">
-              {{file.label}}
-              <div class="btn-group float-right" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-success" (click)="downloadFile(file)"><i
-                    class="fa fa-download"></i>Descargar</button>
-                <div *ngIf="user">
-                  <button type="button" class="btn btn-primary" (click)="editFile(file)"><i class="fas fa-edit"></i>Editar</button>
-                  <button type="button" class="btn btn-danger" (click)="confirmDeleteFile(file)"><i
-                      class="fas fa-trash-alt"></i>Eliminar</button>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-        </div>
-      </div>
-    </div>
- -->
+<loader></loader>
