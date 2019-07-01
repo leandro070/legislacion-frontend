@@ -43,7 +43,7 @@
                 </span>
               </div>
 
-              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" (click)="login()">Ingresar</a>
+              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" [ngClass]="{'is-loading': buttonStates.login == true}" (click)="login()">Ingresar</a>
 
               <p *ngIf="user" class="subtitle is-6">Iniciaste sesión como {{user.fullname}}</p>
               <a *ngIf="user" class="button is-primary is-rounded is-fullwidth" (click)="logout()">Cerrar Sesión</a>
@@ -89,7 +89,7 @@
 
               <br>
               <p class="subtitle is-6">3) Haga click en subir archivo para finalizar</p>
-              <button class="button is-primary is-rounded" [disabled]="!fileUpload" (click)="login()">Subir
+              <button class="button is-primary is-rounded" [ngClass]="{'is-loading': buttonStates.newFile == true}" [disabled]="!fileUpload" (click)="uploadFile()">Subir
                 archivo</button>
             </div>
           </div>
@@ -174,7 +174,7 @@
                 </span>
               </div>
 
-              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" (click)="login()">Ingresar</a>
+              <a *ngIf="!user" class="button is-primary is-rounded is-fullwidth" [ngClass]="{'is-loading': buttonStates.login == true}" (click)="login()">Ingresar</a>
 
               <p *ngIf="user" class="subtitle is-6">Iniciaste sesión como {{user.fullname}}</p>
               <a *ngIf="user" class="button is-primary is-rounded is-fullwidth" (click)="logout()">Cerrar Sesión</a>

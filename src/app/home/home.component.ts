@@ -25,11 +25,16 @@ export class HomeComponent implements OnInit {
   user: User;
   files: IFile[];
 
+  buttonStates = {
+    login: false,
+    newFile: false,
+    download: false
+  };
+
   constructor(
     private authServ: AuthenticationService,
     private storage: StorageService,
-    private filesServ: FilesService,
-    private loaderCtrl: LoaderController
+    private filesServ: FilesService
     ) { }
 
   ngOnInit() {
@@ -38,12 +43,9 @@ export class HomeComponent implements OnInit {
   }
 
   validateToken() {
-    this.loaderCtrl.show();
     this.authServ.ValidateToken().then((user) => {
-      this.loaderCtrl.hide();
       this.user = user;
     }).catch((err) => {
-      this.loaderCtrl.hide();
       console.log('usuario no logueado', err);
     });
   }
@@ -87,8 +89,8 @@ export class HomeComponent implements OnInit {
   }
 
   uploadFile() {
+    this.buttonStates.newFile = true;
     if (this.fileUpload) {
-      this.loaderCtrl.show();
       if (this.fileLabelUpload === '') { // En caso de no haber ingresado ningun nombre al archivo, tomara el nombre que ya posee
         const index = this.fileUpload.name.lastIndexOf('.'); // index tiene el indice en donde aparece un '.' en el nombre del archivo
         if (index !== -1) {
@@ -104,12 +106,13 @@ export class HomeComponent implements OnInit {
 
       this.filesServ.UploadFile(formData)
       .then(file => {
-        this.loaderCtrl.hide();
+        this.buttonStates.newFile = false;
         this.files.push(file);
         this.fileUpload = null;
         this.fileLabelUpload = '';
+        Swal.fire(`Archivo subido con éxito`);
       }, err => {
-        this.loaderCtrl.hide();
+        this.buttonStates.newFile = false;
         this.errorAlert(err.error.error);
       });
     }
@@ -120,16 +123,16 @@ export class HomeComponent implements OnInit {
   }
 
   login() {
-    this.loaderCtrl.show();
+    this.buttonStates.login = true;
     if (this.loginData.password && this.loginData.username) {
       this.authServ.LoginUser({username: this.loginData.username, password: this.loginData.password})
       .then((user) => {
+        this.buttonStates.login = false;
         this.storage.setValue('token', user.token);
         this.user = user;
-        this.loaderCtrl.hide();
       }, err => {
+        this.buttonStates.login = false;
         this.errorAlert(err.error.error);
-        this.loaderCtrl.hide();
       });
     }
   }
